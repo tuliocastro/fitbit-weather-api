@@ -3,16 +3,18 @@ import { WEATHER_MESSAGE_DEVICE, WEATHER_MESSAGE_COMPANION } from './common.js';
 import OpenWeatherImpl from 'impl/open-weather.impl.js';
 import { geolocation } from "geolocation";
 import * as socketChannel from "./socket.channel";
+import * as util from "./weather.utils";
 
 export default class WeatherCompanion {
   
   constructor(){
    
+    this._accessKeys = [];
     this._provider = new OpenWeatherImpl();
     
-    socketChannel.watch(WEATHER_MESSAGE_COMPANION, (data) => {
+    socketChannel.watch(WEATHER_MESSAGE_COMPANION, (deviceConfig) => {
       
-      this._queryWeather(data);
+      this._queryWeather(deviceConfig);
       
     });
     
@@ -22,7 +24,17 @@ export default class WeatherCompanion {
     this._provider = provider;
   }
   
+  setAccessKeys(accessKeys){
+    this._accessKeys = accessKeys;
+  }
+  
+  getAccessKeys(){
+    return this._accessKeys;
+  }
+  
   _queryWeather(config){
+    
+    config.accessKey = util.random(this.getAccessKeys());
     
     geolocation.getCurrentPosition(
       (pos) => {

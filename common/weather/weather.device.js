@@ -9,7 +9,6 @@ export default class WeatherDevice {
   
   constructor(){
     
-    this._accessKeys = [];
     this._onSuccess = dummyFunc;
     this._onError = dummyFunc;
     
@@ -19,14 +18,6 @@ export default class WeatherDevice {
       
     });
     
-  }
-  
-  setAccessKeys(accessKeys){
-    this._accessKeys = accessKeys;
-  }
-  
-  getAccessKeys(){
-    return this._accessKeys;
   }
   
   setOnSuccess(fn){
@@ -63,9 +54,7 @@ export default class WeatherDevice {
   _sendMessageToCompanion(){
     
     var data = {};
-    data[WEATHER_MESSAGE_COMPANION] = {
-      accessKey: util.random(this._accessKeys)
-    }
+    data[WEATHER_MESSAGE_COMPANION] = {}
     
     peerSocket.send(data);
   }
